@@ -5,6 +5,7 @@ pragma solidity ^0.8.11;
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 
 struct NFTListing{
@@ -12,12 +13,21 @@ struct NFTListing{
     address seller;
 }
 
-contract NFTMarket is ERC721URIStorage{
+contract NFTMarket is ERC721URIStorage, Ownable{
 
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIDs;
     using SafeMath for uint256;
     mapping(uint256 => NFTListing) private _listings;
+
+   
+
+
+    //event
+    //if tokenURI is not an empty string then an NFT was created
+    //if price is not 0 then an NFT was listed
+    //if price is 0 and tokenURI is an empty string then NFT was transferred (either bought, or the listing was cancelled)
+    event NFTTransfer(uint256 tokenID,address to, string tokenURI, uint256 price);
 
     constructor() ERC721("ALEX NFT","Aleki"){}
 
@@ -27,6 +37,7 @@ contract NFTMarket is ERC721URIStorage{
         uint256 currentID =_tokenIDs.current();
         _safeMint(msg.sender, currentID);
         _setTokenURI(currentID, tokenURI);
+        emit NFTTransfer(currentID, msg.sender, tokenURI, 0);
     
     }
 
@@ -40,6 +51,7 @@ contract NFTMarket is ERC721URIStorage{
         transferFrom(msg.sender, address(this), tokenID);
         //storing Listing data into the mapping
         _listings[tokenID] = NFTListing(price, msg.sender);
+        emit NFTTransfer(tokenID, address(this), "", price);
     }
 
     // BuyNFt
@@ -55,6 +67,7 @@ contract NFTMarket is ERC721URIStorage{
         clearListing(tokenID);
         // deducting market fee
         payable(msg.sender).transfer(listing.price.mul(95).div(100));
+        emit NFTTransfer(tokenID, msg.sender, "", 0);
 
     }
 
@@ -66,7 +79,16 @@ contract NFTMarket is ERC721URIStorage{
         require(listing.seller == msg.sender,"NFTMarket: you are not the owner");
         transferFrom(address(this), msg.sender, tokenID);
         clearListing(tokenID);
+        emit NFTTransfer(tokenID, msg.sender, "", 0);
 
+    }
+
+    //withdrawing funds
+
+    function withdrawFunds() public onlyOwner{
+        uint256 balance = address(this).balance;
+        require(balance > 0, "NFTMarket: balance is zero");
+        payable(owner()).transfer(balance);
     }
 
     //clear listing from the mapping
