@@ -27,7 +27,7 @@ contract NFTMarket is ERC721URIStorage, Ownable{
     //if tokenURI is not an empty string then an NFT was created
     //if price is not 0 then an NFT was listed
     //if price is 0 and tokenURI is an empty string then NFT was transferred (either bought, or the listing was cancelled)
-    event NFTTransfer(uint256 tokenID,address to, string tokenURI, uint256 price);
+    event NFTTransfer(uint256 tokenID,address from, address to, string tokenURI, uint256 price);
 
     constructor() ERC721("ALEX NFT","Aleki"){}
 
@@ -37,7 +37,7 @@ contract NFTMarket is ERC721URIStorage, Ownable{
         uint256 currentID =_tokenIDs.current();
         _safeMint(msg.sender, currentID);
         _setTokenURI(currentID, tokenURI);
-        emit NFTTransfer(currentID, msg.sender, tokenURI, 0);
+        emit NFTTransfer(currentID,address(0), msg.sender, tokenURI, 0);
     
     }
 
@@ -45,13 +45,11 @@ contract NFTMarket is ERC721URIStorage, Ownable{
 
     function listNFT(uint256 tokenID, uint256 price) public{
         require(price > 0, "NFTMarket: Price must be greater than 0");
-        //approving Transfer NFT ownership and making sure the user is the owner of the NFT
-        approve(address(this), tokenID);
         //transfer ownership of NFT to marketplace Contract
         transferFrom(msg.sender, address(this), tokenID);
         //storing Listing data into the mapping
         _listings[tokenID] = NFTListing(price, msg.sender);
-        emit NFTTransfer(tokenID, address(this), "", price);
+        emit NFTTransfer(tokenID,msg.sender, address(this), "", price);
     }
 
     // BuyNFt
@@ -63,11 +61,11 @@ contract NFTMarket is ERC721URIStorage, Ownable{
         //amount of WEI should be equal to price of NFT
         require(msg.value == listing.price, "NFTMarket: incorrect price");
         //transfer of NFT from market to buyer
-        transferFrom(address(this), msg.sender, tokenID);
+        ERC721(address(this)).transferFrom(address(this), msg.sender, tokenID);
         clearListing(tokenID);
         // deducting market fee
-        payable(msg.sender).transfer(listing.price.mul(95).div(100));
-        emit NFTTransfer(tokenID, msg.sender, "", 0);
+        payable(listing.seller).transfer(listing.price.mul(95).div(100));
+        emit NFTTransfer(tokenID, address(this), msg.sender, "", 0);
 
     }
 
@@ -76,10 +74,10 @@ contract NFTMarket is ERC721URIStorage, Ownable{
         //checking if the NFT is in the listing
         NFTListing memory listing = _listings[tokenID];
         require(listing.price > 0,"NFTMarket: nft not listed for sale");
-        require(listing.seller == msg.sender,"NFTMarket: you are not the owner");
-        transferFrom(address(this), msg.sender, tokenID);
+        require(listing.seller == msg.sender,"NFTMarket: you are not the seller");
+         ERC721(address(this)).transferFrom(address(this), msg.sender, tokenID);
         clearListing(tokenID);
-        emit NFTTransfer(tokenID, msg.sender, "", 0);
+        emit NFTTransfer(tokenID, address(this),msg.sender, "", 0);
 
     }
 
