@@ -4,8 +4,12 @@ import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import Banner from "./Components/Banner";
 import Banner2 from "./Components/Banner2";
+import Layout from "./Components/Layout";
 
-const Home: NextPage = () => {
+import type { ReactElement } from "react";
+import type { NextPageWithLayout } from "./_app";
+
+const Home = () => {
   return (
     <div>
       <Banner />
@@ -15,3 +19,7 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+
+Home.getLayout = function getLayout(page: ReactElement) {
+  return <Layout>{page}</Layout>;
+};
