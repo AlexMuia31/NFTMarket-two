@@ -7,7 +7,6 @@ import Banner2 from "./Components/Banner2";
 import Layout from "./Components/Layout";
 
 import type { ReactElement } from "react";
-import type { NextPageWithLayout } from "./_app";
 
 const Home = () => {
   return (

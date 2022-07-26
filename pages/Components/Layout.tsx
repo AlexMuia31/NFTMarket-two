@@ -14,6 +14,7 @@ export default function Layout({ children, ...props }: Props) {
     <div>
       <Head>
         <title>NFT MarketPlace</title>
+        <link rel="icon" href="/logo.svg" />
       </Head>
       <NavBar />
       <Box>{children}</Box>
