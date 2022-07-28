@@ -1,8 +1,11 @@
 import React from "react";
 import { AppBar, Box, Button, Container, Toolbar } from "@mui/material";
 import Link from "next/link";
+import Blockies from "react-blockies";
+import useSigner from "../state/nft-market/signer";
 
 const NavBar = () => {
+  const { address, loading, connectWallet } = useSigner();
   return (
     <Box>
       <AppBar sx={{ backgroundColor: "#000002" }}>
@@ -60,27 +63,34 @@ const NavBar = () => {
                 alignItems: "center",
               }}
             >
-              {/* // <Button
-                //   sx={{
-                //     border: "1px solid white",
-                //     color: "white",
-                //     borderRadius: "20px",
-                //     height: "50px",
-                //   }}
-                // >
-                //   {address.slice(0, 6) + "..." + address.slice(-4)}
-                // </Button> */}
-
-              <Button
-                sx={{
-                  border: "1px solid white",
-                  color: "white",
-                  borderRadius: "20px",
-                  height: "50px",
-                }}
-              >
-                Connect Wallet
-              </Button>
+              {address ? (
+                <Button
+                  sx={{
+                    border: "1px solid white",
+                    color: "white",
+                    borderRadius: "20px",
+                    height: "50px",
+                  }}
+                  startIcon={
+                    <Blockies seed={address.toLocaleLowerCase()} size={7} />
+                  }
+                >
+                  {address.slice(0, 6) + "..." + address.slice(-4)}
+                </Button>
+              ) : (
+                <Button
+                  sx={{
+                    border: "1px solid white",
+                    color: "white",
+                    borderRadius: "20px",
+                    height: "50px",
+                  }}
+                  onClick={connectWallet}
+                  disabled={loading}
+                >
+                  {loading ? "Busy..." : "Connect Wallet"}
+                </Button>
+              )}
             </Box>
           </Container>
         </Toolbar>

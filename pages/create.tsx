@@ -6,8 +6,11 @@ import { CssTextField } from "./Components/TextFields";
 import Layout from "./Components/Layout";
 
 import type { ReactElement } from "react";
+import useSigner from "./state/nft-market/signer";
 
 const Create = () => {
+  const { signer } = useSigner();
+
   return (
     <Box sx={{ backgroundColor: "#b4b7bf" }}>
       <Toolbar />
