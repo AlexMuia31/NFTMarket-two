@@ -8,8 +8,14 @@ const NavBar = () => {
       <AppBar sx={{ backgroundColor: "#000002" }}>
         <Toolbar>
           <Container maxWidth="xl" sx={{ display: "flex" }}>
-            <Box sx={{ flex: 0.3, alignItems: "center", display: "flex" }}>
-              <Link href="/">
+            <Box
+              sx={{
+                flex: 0.3,
+                alignItems: "center",
+                display: "flex",
+              }}
+            >
+              <Link href="/" style={{ cursor: "pointer" }}>
                 <img src="/logo.svg" height="100px" alt="logo" />
               </Link>
             </Box>
