@@ -19,7 +19,43 @@ const Create = () => {
     price: "",
   });
 
-  const handleChange = (e: { target: { name: any; value: any } }) => {
+  const createNFT = async (inputs: any) => {
+    try {
+      const data = new FormData();
+      data.append("name", inputs.name);
+      data.append("description", inputs.description);
+      data.append("file", inputs.file);
+      const response = await fetch("/api/nft-storage", {
+        method: "POST",
+        body: data,
+      });
+      if (response.status == 201) {
+        const json = await response.json();
+        console.log("tokenURI", json.uri);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    return createNFT;
+  };
+
+  const handleChange = async (e: { target: { name: any; value: any } }) => {
+    try {
+      const data = new FormData();
+      data.append("name", inputs.name);
+      data.append("description", inputs.description);
+      data.append("file", inputs.file);
+      const response = await fetch("/api/nft-storage", {
+        method: "POST",
+        body: data,
+      });
+      if (response.status == 201) {
+        const json = await response.json();
+        console.log("tokenURI", json.uri);
+      }
+    } catch (error) {
+      console.log(error);
+    }
     setInputs((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
