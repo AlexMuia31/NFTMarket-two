@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Box, Button, Container, Toolbar } from "@mui/material";
 
 import UploadFileIcon from "@mui/icons-material/UploadFile";
@@ -11,7 +11,7 @@ import Loader from "./Components/loader";
 
 const Create = () => {
   const { signer } = useSigner();
-
+  const uploadInputRef = useRef(null);
   const [inputs, setInputs] = useState({
     file: "",
     name: "",
@@ -52,14 +52,14 @@ const Create = () => {
       if (response.status == 201) {
         const json = await response.json();
         console.log("tokenURI", json.uri);
+        setInputs((prevState) => ({
+          ...prevState,
+          [e.target.name]: e.target.value,
+        }));
       }
     } catch (error) {
       console.log(error);
     }
-    setInputs((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value,
-    }));
   };
 
   const handleSubmit = (e: { preventDefault: () => void }) => {
