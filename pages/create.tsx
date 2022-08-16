@@ -13,59 +13,29 @@ const Create = () => {
   const { signer } = useSigner();
   const uploadInputRef = useRef(null);
   const [inputs, setInputs] = useState({
-    file: "",
     name: "",
     description: "",
     price: "",
   });
+  const [selectedFile, setSelectedFile] = React.useState(null);
 
-  const createNFT = async (inputs: any) => {
-    try {
-      const data = new FormData();
-      data.append("name", inputs.name);
-      data.append("description", inputs.description);
-      data.append("file", inputs.file);
-      const response = await fetch("/api/nft-storage", {
-        method: "POST",
-        body: data,
-      });
-      if (response.status == 201) {
-        const json = await response.json();
-        console.log("tokenURI", json.uri);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-    return createNFT;
+  const handleCapture = ({ target }: any) => {
+    setSelectedFile(target.files[0]);
   };
 
   const handleChange = async (e: { target: { name: any; value: any } }) => {
-    try {
-      const data = new FormData();
-      data.append("name", inputs.name);
-      data.append("description", inputs.description);
-      data.append("file", inputs.file);
-      const response = await fetch("/api/nft-storage", {
-        method: "POST",
-        body: data,
-      });
-      if (response.status == 201) {
-        const json = await response.json();
-        console.log("tokenURI", json.uri);
-        setInputs((prevState) => ({
-          ...prevState,
-          [e.target.name]: e.target.value,
-        }));
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    setInputs((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }));
   };
 
   const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault();
     console.log(inputs);
+    console.log(selectedFile);
   };
+
   return (
     <Box sx={{ backgroundColor: "#b4b7bf" }}>
       <Toolbar />
@@ -88,10 +58,10 @@ const Create = () => {
               sx={{ color: "black", bgcolor: "#0fe9ef" }}
             >
               <input
+                accept="image"
                 type="file"
                 name="file"
-                value={inputs.file}
-                onChange={handleChange}
+                onChange={handleCapture}
               />
             </Button>
             <CssTextField
