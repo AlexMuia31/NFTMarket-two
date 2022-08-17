@@ -15,7 +15,6 @@ const Create = () => {
   const [inputs, setInputs] = useState({
     name: "",
     description: "",
-    price: "",
   });
   const [selectedFile, setSelectedFile] = React.useState(null);
 
@@ -84,7 +83,7 @@ const Create = () => {
               placeholder="Add a Description"
               required
             />
-            <CssTextField
+            {/* <CssTextField
               name="price"
               value={inputs.price}
               onChange={handleChange}
@@ -92,7 +91,7 @@ const Create = () => {
               type="number"
               required
               sx={{ width: "80%", mt: "4%" }}
-            />
+            /> */}
             <Button
               type="submit"
               sx={{
