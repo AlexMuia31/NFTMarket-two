@@ -1,13 +1,16 @@
 import type { AppProps } from "next/app";
 import "react-toastify/dist/ReactToastify.css";
 import Layout from "../components/Layout";
+import { SignerProvider } from "../state/signer";
 import "../styles/globals.css";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
-    <Layout>
-      <Component {...pageProps} />
-    </Layout>
+    <SignerProvider>
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
+    </SignerProvider>
   );
 };
 
