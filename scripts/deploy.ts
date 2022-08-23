@@ -16,4 +16,5 @@ main().catch((error) => {
   process.exitCode = 1;
 });
 
-// Contract deployed to: 0xE1acB28f24bf27592778E3C0b616F5fF064cFA6c
+// Contract deployed to: 0xE1acB28f24bf27592778E3C0b616F5fF064cFA6c  . This is goerli network
+//Contract deployed to: 0x812277A657b021206bDDe901684bFBe0c4E88F22 this is rinkeby network

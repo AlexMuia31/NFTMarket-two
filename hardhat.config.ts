@@ -3,13 +3,13 @@ import "@nomicfoundation/hardhat-toolbox";
 import "dotenv/config";
 
 const PRIVATE_KEY = process.env.PRIVATE_KEY as string;
-const GOERLI_URL = process.env.GOERLI_URL as string;
+const RINKEBY = process.env.RINKEBY_URL as string;
 
 const config: HardhatUserConfig = {
   solidity: "0.8.11",
   networks: {
-    goerli: {
-      url: GOERLI_URL,
+    rinkeby: {
+      url: RINKEBY,
       accounts: [PRIVATE_KEY],
     },
   },
