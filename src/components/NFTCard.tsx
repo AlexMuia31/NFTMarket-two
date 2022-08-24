@@ -1,8 +1,9 @@
 import classNames from "classnames";
 import { BigNumber } from "ethers";
 import { useEffect, useState } from "react";
-import { NFT } from "state/nft-market/interfaces";
+
 import { ipfsToHTTPS } from "../helpers";
+import { NFT } from "../state/nft-market/interfaces";
 import AddressAvatar from "./AddressAvatar";
 import SellPopup from "./SellPopup";
 
