@@ -3,7 +3,9 @@ import { BigNumber } from "ethers";
 import { useEffect, useState } from "react";
 
 import { ipfsToHTTPS } from "../helpers";
+import useNFTMarket from "../state/nft-market";
 import { NFT } from "../state/nft-market/interfaces";
+import useSigner from "../state/signer";
 import AddressAvatar from "./AddressAvatar";
 import SellPopup from "./SellPopup";
 
@@ -20,7 +22,8 @@ type NFTCardProps = {
 
 const NFTCard = (props: NFTCardProps) => {
   const { nft, className } = props;
-  const address = "";
+  const { listNFT } = useNFTMarket();
+  const { address } = useSigner();
   const [meta, setMeta] = useState<NFTMetadata>();
   const [loading, setLoading] = useState(false);
   const [sellPopupOpen, setSellPopupOpen] = useState(false);
@@ -62,7 +65,16 @@ const NFTCard = (props: NFTCardProps) => {
   };
 
   const onSellConfirmed = async (price: BigNumber) => {
-    // TODO: list NFT
+    setSellPopupOpen(false);
+    setLoading(true);
+    try {
+      await listNFT(nft.id, price);
+    } catch (error) {
+      console.log(error);
+    }
+
+    setLoading(false);
+    console.log("PRICE: ", price);
   };
 
   const forSale = nft.price != "0";

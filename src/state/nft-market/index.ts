@@ -1,4 +1,4 @@
-import { Contract } from "ethers";
+import { BigNumber, Contract } from "ethers";
 import { CreationValues } from "../../modules/CreationPage/CreationForm";
 import useSigner from "../signer";
 import NFT_MARKET from "../../../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
@@ -35,6 +35,14 @@ const useNFTMarket = () => {
       console.log(error);
     }
   };
-  return { createNFT, ...ownedNFTs };
+
+  const listNFT = async (tokenID: string, price: BigNumber) => {
+    const transaction: TransactionResponse = await nftmarket.listNFT(
+      tokenID,
+      price
+    );
+    await transaction.wait();
+  };
+  return { createNFT, listNFT, ...ownedNFTs };
 };
 export default useNFTMarket;
