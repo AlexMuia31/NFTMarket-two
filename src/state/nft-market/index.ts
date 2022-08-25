@@ -4,14 +4,15 @@ import useSigner from "../signer";
 import NFT_MARKET from "../../../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
 import { TransactionResponse } from "@ethersproject/providers";
 import useOwnedNFTs from "./useOwnedNFTs";
-
-const NFT_MARKET_ADDRESS = process.env.NEXT_PUBLIC_NFT_MARKET_ADDRESS as string;
+import useOwnedListedNFTs from "./useOwnedListedNFTs";
+import { NFT_MARKET_ADDRESS } from "./config";
 
 const useNFTMarket = () => {
   const { signer } = useSigner();
   const nftmarket = new Contract(NFT_MARKET_ADDRESS, NFT_MARKET.abi, signer);
 
   const ownedNFTs = useOwnedNFTs();
+  const ownedListedNFTs = useOwnedListedNFTs();
   //creating the nft and uploading it to nft.storage
   const createNFT = async (values: CreationValues) => {
     try {
@@ -43,6 +44,20 @@ const useNFTMarket = () => {
     );
     await transaction.wait();
   };
-  return { createNFT, listNFT, ...ownedNFTs };
+
+  const cancelListing = async (tokenID: string) => {
+    const transaction: TransactionResponse = await nftmarket.cancelListing(
+      tokenID
+    );
+    await transaction.wait();
+  };
+
+  return {
+    createNFT,
+    listNFT,
+    cancelListing,
+    ...ownedNFTs,
+    ...ownedListedNFTs,
+  };
 };
 export default useNFTMarket;
