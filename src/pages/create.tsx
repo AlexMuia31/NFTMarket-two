@@ -1,8 +1,11 @@
-import type { NextPage } from "next";
 import CreationPage from "../modules/CreationPage";
 
 const Create = () => {
-  return <CreationPage />;
+  return (
+    <div>
+      <CreationPage />
+    </div>
+  );
 };
 
 export default Create;
