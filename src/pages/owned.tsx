@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import OwnedPage from "../modules/OwnedPage";
 
-const Owned: NextPage = () => {
+const Owned = () => {
   return <OwnedPage />;
 };
 

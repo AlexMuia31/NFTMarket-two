@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import HomePage from "../modules/HomePage";
 
-const Home: NextPage = () => {
+const Home = () => {
   return <HomePage />;
 };
 
