@@ -13,7 +13,7 @@ const HomePage = () => {
   const loaded = signer && listedNFTs && listedNFTs.length > 0;
 
   return (
-    <div className="flex w-full flex-col">
+    <div className="flex w-full flex-col justify-items-center ">
       {notConnected && <EmptyState>Connect your wallet</EmptyState>}
       {loading && <EmptyState>Loading...</EmptyState>}
       {empty && <EmptyState>Nothing to show here</EmptyState>}
