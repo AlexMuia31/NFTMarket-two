@@ -22,7 +22,7 @@ type NFTCardProps = {
 
 const NFTCard = (props: NFTCardProps) => {
   const { nft, className } = props;
-  const { listNFT, cancelListing } = useNFTMarket();
+  const { listNFT, cancelListing, buyNFT } = useNFTMarket();
   const { address } = useSigner();
   const [meta, setMeta] = useState<NFTMetadata>();
   const [loading, setLoading] = useState(false);
@@ -57,11 +57,17 @@ const NFTCard = (props: NFTCardProps) => {
   };
 
   const onBuyClicked = async () => {
-    // TODO: buy NFT
+    setLoading(true);
+    try {
+      await buyNFT(nft);
+    } catch (error) {
+      console.log(error);
+    }
+
+    setLoading(false);
   };
 
   const onCancelClicked = async () => {
-    setSellPopupOpen(false);
     setLoading(true);
     try {
       await cancelListing(nft.id);

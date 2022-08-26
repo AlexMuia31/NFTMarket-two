@@ -6,6 +6,9 @@ import { TransactionResponse } from "@ethersproject/providers";
 import useOwnedNFTs from "./useOwnedNFTs";
 import useOwnedListedNFTs from "./useOwnedListedNFTs";
 import { NFT_MARKET_ADDRESS } from "./config";
+import useListedNFTs from "./useListedNFTs";
+import { NFT } from "./interfaces";
+import { ethers } from "ethers";
 
 const useNFTMarket = () => {
   const { signer } = useSigner();
@@ -13,6 +16,7 @@ const useNFTMarket = () => {
 
   const ownedNFTs = useOwnedNFTs();
   const ownedListedNFTs = useOwnedListedNFTs();
+  const listedNFTs = useListedNFTs();
   //creating the nft and uploading it to nft.storage
   const createNFT = async (values: CreationValues) => {
     try {
@@ -52,12 +56,21 @@ const useNFTMarket = () => {
     await transaction.wait();
   };
 
+  const buyNFT = async (nft: NFT) => {
+    const transaction: TransactionResponse = await nftmarket.buyNFT(nft.id, {
+      value: ethers.utils.parseEther(nft.price),
+    });
+    await transaction.wait();
+  };
+
   return {
     createNFT,
     listNFT,
+    buyNFT,
     cancelListing,
     ...ownedNFTs,
     ...ownedListedNFTs,
+    ...listedNFTs,
   };
 };
 export default useNFTMarket;
